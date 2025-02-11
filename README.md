@@ -6,7 +6,6 @@
   - [Team Members](#team-members)
   - [Project Overview](#project-overview)
   - [Features](#features)
-  - [Data Collection \& Processing](#data-collection--processing)
   - [System Design](#system-design)
     - [1. Hardware Design](#1-hardware-design)
     - [2. Dataset Preparation](#2-dataset-preparation)
@@ -39,12 +38,6 @@ This project aims to develop an IoT-based system for the early detection and loc
 - **Drone-Based Data Collection:** Transfers data from traps to a central processing unit.
 - **Real-Time Monitoring:** Provides instant alerts and geolocation of detected infestations.
 - **Scalability:** Can be expanded to cover large palm plantations.
-
-## Data Collection & Processing
-- **Image Acquisition:** Online Datasets.
-- **Preprocessing:** Noise reduction, segmentation, and feature extraction.
-- **Classification:** ML model determines the presence of red palm weevils.
-
 
 ## System Design
 This section details the design steps of the proposed IoMT system for early RPW detection. The design ensures that the system effectively detects RPWs, communicates the results, and retrieves them back to the server.
