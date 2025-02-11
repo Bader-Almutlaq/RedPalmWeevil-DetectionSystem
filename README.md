@@ -124,10 +124,6 @@ Data communication is achieved through a two-step process:
   - **Location Snapshot:** GPS coordinates  
   - **Sensor Data:** Optional additional data
 
-- **Drone to Server Packet:**  
-  - **Drone ID:** Unique identifier for the drone  
-  - **Drone Status:** Battery level and signal strength  
-  - _Includes all fields from the Trap-to-Drone packet._
 
 ## Technologies Used
 - **Hardware:** ESP-32 CAM, GPS NEO-6M, Drone, Sensors
