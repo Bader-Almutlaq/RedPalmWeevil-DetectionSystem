@@ -1,3 +1,4 @@
+# This file is used to create a mixed dataset.
 import os
 import shutil
 import random
@@ -15,91 +16,77 @@ def create_mixed_dataset(
         output_folder: Path where mixed images will be saved
         extensions: Tuple of image file extensions to include
     """
-    # Create output folder if it doesn't exist
     os.makedirs(output_folder, exist_ok=True)
 
-    # Expected subfolder names
-    insects_folder = "Dataset-Other-Insects"
-    rpw_folder = "Dataset-RPW"
+    nrpw_folder = "NRPW"
+    rpw_folder = "RPW"
 
-    # List to store all valid image files and a dictionary to track file counts per folder
     all_image_files = []
     files_by_folder = {}
 
-    # Process each folder specifically
-    for subfolder in [insects_folder, rpw_folder]:
+    for subfolder in [nrpw_folder, rpw_folder]:
         subfolder_path = os.path.join(base_folder, subfolder)
         if not os.path.exists(subfolder_path):
             print(f"Warning: Folder {subfolder_path} not found")
             continue
 
-        folder_files = []  # Store images from the current subfolder
-
-        # Walk through all files in the subfolder
+        folder_files = []
         for root, _, files in os.walk(subfolder_path):
             for file in files:
                 if file.lower().endswith(extensions):
-                    # Get full source path and store it with folder info
                     source_path = os.path.join(root, file)
                     folder_files.append((source_path, subfolder, file))
 
-        all_image_files.extend(folder_files)  # Add to the main list
-        files_by_folder[subfolder] = len(folder_files)  # Store count for summary
+        all_image_files.extend(folder_files)
+        files_by_folder[subfolder] = len(folder_files)
 
-    # Shuffle the list of all collected images to mix them randomly
     random.shuffle(all_image_files)
 
-    # Copy files to the output folder with new naming conventions
-    for i, (source_path, subfolder, original_filename) in enumerate(all_image_files, 1):
-        # Extract the file extension
+    # Track new names with per-class counters
+    class_counters = {nrpw_folder: 0, rpw_folder: 0, "Other": 0}
+
+    metadata_records = []
+
+    for source_path, subfolder, original_filename in all_image_files:
         _, ext = os.path.splitext(original_filename)
 
-        # Create a new filename based on the original folder
-        if subfolder == insects_folder:
-            new_filename = f"{i:d}-Insects{ext}"
+        if subfolder == nrpw_folder:
+            class_counters[nrpw_folder] += 1
+            new_filename = f"NRPW-{class_counters[nrpw_folder]}{ext}"
         elif subfolder == rpw_folder:
-            new_filename = f"{i:d}-RPW{ext}"
+            class_counters[rpw_folder] += 1
+            new_filename = f"RPW-{class_counters[rpw_folder]}{ext}"
         else:
-            new_filename = f"{i:d}-Other{ext}"  # Fallback for unexpected folders
+            class_counters["Other"] += 1
+            new_filename = f"Other-{class_counters['Other']}{ext}"
 
-        # Construct the destination path
         dest_path = os.path.join(output_folder, new_filename)
-
-        # Copy the file to the new location
         shutil.copy2(source_path, dest_path)
 
-    # Print summary of the process
+        metadata_records.append((subfolder, original_filename, new_filename))
+
     total_copied = len(all_image_files)
     print(f"Mixed dataset created successfully in: {output_folder}")
     print(f"Total images copied: {total_copied}")
     for folder, count in files_by_folder.items():
-        suffix = "Insects" if folder == insects_folder else "RPW"
+        suffix = "NRPW" if folder == nrpw_folder else "RPW"
         print(f"  - {folder}: {count} images (renamed with suffix '{suffix}')")
 
-    # Create a metadata file to track original sources and new filenames
-    with open(os.path.join(output_folder, "metadata.txt"), "w") as f:
+    # Save metadata file
+    metadata_path = os.path.join(output_folder, "metadata.txt")
+    with open(metadata_path, "w") as f:
         f.write("Number,Original_Folder,Original_Filename,New_Filename\n")
-        for i, (source_path, subfolder, original_filename) in enumerate(
-            all_image_files, 1
+        for i, (subfolder, original_filename, new_filename) in enumerate(
+            metadata_records, 1
         ):
-            _, ext = os.path.splitext(original_filename)
-            if subfolder == insects_folder:
-                new_filename = f"{i:d}-Insects{ext}"
-            elif subfolder == rpw_folder:
-                new_filename = f"{i:d}-RPW{ext}"
-            else:
-                new_filename = f"{i:d}-Other{ext}"
             f.write(f"{i:04d},{subfolder},{original_filename},{new_filename}\n")
-    print(f"Metadata file created with original and new file information")
+    print(f"Metadata file created: {metadata_path}")
 
 
 if __name__ == "__main__":
-    # Configuration: Define input and output folders
     base_folder = "./data"
     output_folder = "data/mixed_dataset"
 
-    # Set random seed for reproducibility (optional, remove for truly random results)
     random.seed(42)
 
-    # Run the dataset creation function
     create_mixed_dataset(base_folder, output_folder)
