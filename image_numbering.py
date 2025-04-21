@@ -9,19 +9,21 @@ name = "RPW"  # Class name to use as a prefix in filenames
 starting_counter = 1  # Initial number for renaming files
 
 # Define source and target folders based on the class name
-source_folder = f"./data/{name}"
-target_folder = f"./data/{name}.class"
+source_folder = f"./test/{name}"
+target_folder = f"./test/{name}_new"
 
 # Create the target folder if it doesn't exist
 os.makedirs(target_folder, exist_ok=True)
 
 # List to store all image filenames from the source folder
+image_extensions = (".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp")
 imgs = []
 
 # Traverse the source folder and collect image filenames
 for root, _, files in os.walk(source_folder):
     for file in files:
-        imgs.append(file)
+        if file.lower().endswith(image_extensions):
+            imgs.append(file)
 
 print(f"The number of images read: {len(imgs)}")
 
