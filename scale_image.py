@@ -19,7 +19,7 @@ for filename in os.listdir(input_folder):
 
         # Open and resize the image
         with Image.open(input_path) as img:
-            img_resized = img.resize((160, 160))
+            img_resized = img.resize((1080, 1080))
 
             # Save the resized image to the output folder
             img_resized.save(output_path)
