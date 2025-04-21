@@ -1,5 +1,5 @@
 # 🐛 Red Palm Weevil Detection - Cropping YOLOv8 Inference Results
-
+##colab link : https://colab.research.google.com/drive/1hULgYs3y9MFe5V9gGf6IPp3l9f7Fa8py?usp=sharing
 This project demonstrates how to use a custom-trained **YOLOv8 model** (exported from Roboflow) to **detect and crop** Red Palm Weevil (RPW) insects from high-resolution images using **Google Colab**.
 
 ---
@@ -27,3 +27,4 @@ The Colab notebook includes:
 
 ```python
 !pip install ultralytics opencv-python
+
