@@ -35,6 +35,8 @@ augmentations = [
     ("sharpen", A.Compose([A.Sharpen(alpha=(0.2, 0.5), lightness=(0.5, 1.0), p=1.0)])),
     ("rot_plus30", A.Compose([A.Rotate(limit=(30, 30), p=1.0)])),
     ("rot_minus30", A.Compose([A.Rotate(limit=(-30, -30), p=1.0)])),
+    ("rot_plus60", A.Compose([A.Rotate(limit=(60, 60), p=1.0)])),
+    ("rot_minus60", A.Compose([A.Rotate(limit=(-60, -60), p=1.0)])),
 ]
 
 # Process images
