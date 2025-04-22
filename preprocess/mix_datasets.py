@@ -84,8 +84,8 @@ def create_mixed_dataset(
 
 
 if __name__ == "__main__":
-    base_folder = "./data"
-    output_folder = "data/mixed_dataset"
+    base_folder = "../data"
+    output_folder = "../data/mixed_dataset"
 
     random.seed(42)
 

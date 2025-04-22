@@ -2,8 +2,8 @@ import os
 from PIL import Image
 
 # Input and output directories
-input_folder = "test/RPW-trap"
-output_folder = "test/RPW-trap-160"
+input_folder = "../test/RPW-trap"
+output_folder = "../test/RPW-trap-160"
 
 # Create the output folder if it doesn't exist
 if not os.path.exists(output_folder):

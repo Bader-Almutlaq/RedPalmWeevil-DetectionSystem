@@ -2,9 +2,9 @@
 import os
 import shutil
 
-folder = "./data/mixed_dataset"
-target_1 = "./data/RPW.class"
-target_2 = "./data/NRPW.class"
+folder = "../data/mixed_dataset"
+target_1 = "../data/RPW.class"
+target_2 = "../data/NRPW.class"
 os.makedirs(target_1, exist_ok=True)
 os.makedirs(target_2, exist_ok=True)
 

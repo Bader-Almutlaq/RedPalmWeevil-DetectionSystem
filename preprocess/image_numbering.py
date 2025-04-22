@@ -9,8 +9,8 @@ name = "RPW"  # Class name to use as a prefix in filenames
 starting_counter = 1  # Initial number for renaming files
 
 # Define source and target folders based on the class name
-source_folder = f"./test/{name}"
-target_folder = f"./test/{name}_new"
+source_folder = f"../test/{name}"
+target_folder = f"../test/{name}_new"
 
 # Create the target folder if it doesn't exist
 os.makedirs(target_folder, exist_ok=True)
