@@ -5,8 +5,8 @@ import numpy as np
 from tqdm import tqdm
 
 # Paths
-INPUT_DIR = "../test/RPW-crop"
-OUTPUT_DIR = "../test/RPW-crop-augmented"
+INPUT_DIR = "../test/RPW_crop"
+OUTPUT_DIR = "../test/RPW_crop_augmented"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Define the exact augmentation pipeline (each one separate)

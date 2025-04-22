@@ -60,10 +60,12 @@ def draw(image_draw, label, confidence, point_1, point_2, color):
 
 def save_image(image):
     try:
+        os.makedirs(output_folder, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_filename = f"classified_{timestamp}.jpg"
         output_path = os.path.join(output_folder, output_filename)
         cv2.imwrite(output_path, image)
+        print("image Was saved")
     except Exception as e:
         print(f"[!] Failed to save image: {e}")
 
@@ -99,7 +101,6 @@ def main():
         return False
 
     print("=" * 95)
-    print("Model Results:")
 
     for idx, box in enumerate(boxes):
         try:
@@ -113,7 +114,7 @@ def main():
 
             pred, conf = predict(pil_image=input_tensor)
             label = "RPW" if pred == 1 else "NRPW"
-            color = (0, 0, 255) if label == "RPW" else (0, 255, 255)
+            color = (0, 0, 255) if label == "RPW" else (0, 255, 0)
 
             if label == "RPW" and conf > maxvalue_confidence:
                 maxvalue_confidence = conf
@@ -131,6 +132,7 @@ def main():
             continue
 
     save_image(image)
+    print("Model Results:")
     print(f"Label: {label}")
     print(f"Max RPW confidence: {maxvalue_confidence:.4f}")
     print("=" * 95)
