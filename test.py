@@ -11,35 +11,30 @@ model_path = "saved_full_models/efficientnet_b4_rpw.pth"
 model_path_yolo = "saved_full_models/yolo.pt"
 output_folder = "./positive"
 
-# Setting the device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Loading the model
 try:
     model = torch.load(model_path, map_location=device, weights_only=False)
     model.eval()
 except Exception as e:
     print(f"[!] Error loading classification model: {e}")
-    exit(1)
+    model = None  # Prevent crash
 
-# ======= Step 2: Define image transformation =======
 transform = transforms.Compose(
     [
-        transforms.Resize((380, 380)),  # for EfficientNetB4
+        transforms.Resize((380, 380)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ]
 )
 
 
-# ======= Step 3: Predict a single image (PIL image) =======
 def predict(pil_image, model=model, transform=transform, device=device):
     try:
         with torch.no_grad():
             output = model(pil_image)
             probabilities = torch.softmax(output, dim=1)
             confidence, predicted = torch.max(probabilities, 1)
-            print(predicted)
         return predicted.item(), confidence.item()
     except Exception as e:
         print(f"[!] Prediction error: {e}")
@@ -73,13 +68,16 @@ def save_image(image):
         print(f"[!] Failed to save image: {e}")
 
 
-# === MAIN ===
 def main():
+    if model is None:
+        print("[!] Model not loaded. Skipping...")
+        return False
+
     try:
         yolo_model = YOLO(model_path_yolo)
     except Exception as e:
         print(f"[!] Error loading YOLO model: {e}")
-        return
+        return False
 
     try:
         image = cv2.imread("data/NRPW/NRPW-6.jpg")
@@ -87,18 +85,22 @@ def main():
             raise ValueError("Image is None (possibly missing or unreadable)")
     except Exception as e:
         print(f"[!] Failed to read image: {e}")
-        return
+        return False
 
     maxvalue_confidence = 0.0
 
     try:
+        print("=" * 95)
+        print("Yolo info:", end="")
         results = yolo_model(image)[0]
         boxes = results.boxes.xyxy.cpu().numpy()
     except Exception as e:
         print(f"[!] YOLO detection error: {e}")
-        return
+        return False
 
-    print("=========================")
+    print("=" * 95)
+    print("Model Results:")
+
     for idx, box in enumerate(boxes):
         try:
             x1, y1, x2, y2 = map(int, box[:4])
@@ -124,14 +126,19 @@ def main():
                 point_2=(x2, y2),
                 color=color,
             )
-
         except Exception as e:
             print(f"[!] Error processing box {idx}: {e}")
             continue
 
     save_image(image)
+    print(f"Label: {label}")
     print(f"Max RPW confidence: {maxvalue_confidence:.4f}")
+    print("=" * 95)
+
+    return True
 
 
 if __name__ == "__main__":
-    main()
+    success = main()
+    if not success:
+        print("[!] Script failed but exited cleanly.")
