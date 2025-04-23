@@ -26,9 +26,15 @@ except Exception as e:
     model = None  # Prevent crash if model loading fails
 
 # Transformation applied to image crops before classification
+# Model input sizes:
+# - MobileNet:        224 x 224
+# - EfficientNet-B0:  224 x 224
+# - EfficientNet-B2:  260 x 260
+# - EfficientNet-B3:  300 x 300
+# - EfficientNet-B4:  380 x 380
 transform = transforms.Compose(
     [
-        transforms.Resize((380, 380)),
+        transforms.Resize((380, 380)),  # TODO: Change this based on the model
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ]
