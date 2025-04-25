@@ -1,4 +1,4 @@
-# Red Palm Weevil Detection - Trap Node
+# Trap Node - Red Palm Weevil Detection
 
 ## Purpose
 
