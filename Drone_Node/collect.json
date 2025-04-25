@@ -1,0 +1,15 @@
+{
+    "data_collected": false,
+    "TRAPS": [
+      "1",
+      "2"
+    ],
+    "1": {
+      "collected": false,
+      "results": {}
+    },
+    "2": {
+      "collected": false,
+      "results": {}
+    }
+}
