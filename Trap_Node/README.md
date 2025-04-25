@@ -1,0 +1,1 @@
+This folder contains all files in the trap raspberry pi! 
