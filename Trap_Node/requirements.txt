@@ -1,0 +1,10 @@
+ultralytics==8.3.115
+torch==2.7.0
+torchvision==0.22.0
+python-nmap==0.7.1
+pyserial==3.5
+pynmea2==1.19.0
+picamera2==0.3.25
+pillow==11.2.1
+opencv-python==4.11.0.86
+Flask==2.2.2
