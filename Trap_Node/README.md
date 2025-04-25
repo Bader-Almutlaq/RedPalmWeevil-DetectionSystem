@@ -26,12 +26,10 @@ The "Trap Node" folder contains the code necessary for setting up the Raspberry 
 3. **Install Dependencies**:
    - Open a terminal and run:
      ```bash
-     sudo apt-get update
-     sudo apt-get install python3-pip
      pip3 install -r requirements.txt
      ```
 
-4. **A: Clone Repository**:
+4. **Clone Repository**:
    - Clone the GitHub repository to your Raspberry Pi:
      ```bash
      git clone https://github.com/Bader-Almutlaq/RedPalmWeevil-DetectionSystem.git
@@ -49,7 +47,7 @@ The "Trap Node" folder contains the code necessary for setting up the Raspberry 
      python3 main.py
      ```
 
-### Optional: Running Heedlessly with Crontab
+## Optional: Running Heedlessly with Crontab
 
 To run the script automatically after booting (headless), use `cron`:
 
@@ -81,6 +79,6 @@ To run the script automatically after booting (headless), use `cron`:
 
 - Ensure your Raspberry Pi is connected to a camera module for image capture.
 - The system assumes a Flask server is running on another Raspberry Pi for receiving results.
-- For continuous operation, you can set the scripts to run as background processes, just follow the steps given [here](#optional-running-heedlessly-with-crontab)
+- For continuous operation, you can set the scripts to run as background processes, just follow the steps given before.
 
 
