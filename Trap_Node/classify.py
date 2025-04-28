@@ -207,11 +207,11 @@ def run_inference():
     print("[classify] Output image saved successfully.")
 
     # Save result
-    save_classification(label, maxvalue_confidence)
+    save_classification(img_label, maxvalue_confidence)
 
     # Log final results
     print("[classify] Model Results:")
-    print(f"[classify] Label: {label}")
+    print(f"[classify] Label: {img_label}")
     print(f"[classify] Max RPW confidence: {maxvalue_confidence:.4f}")
 
     return True
