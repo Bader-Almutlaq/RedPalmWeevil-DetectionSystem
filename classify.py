@@ -8,7 +8,7 @@ from ultralytics import YOLO
 
 # ======= Step 1: Configurations =======
 model_path = (
-    "saved_full_models/efficientnet_b4_rpw.pth"  # Path to the classification model
+    "saved_full_models/efficientnet_b3_rpw.pth"  # Path to the classification model
 )
 model_path_yolo = "saved_full_models/yolo.pt"  # Path to the YOLO object detection model
 output_folder = "./positive"  # Folder where output images will be saved
@@ -135,13 +135,14 @@ def main():
     # Read input image
     try:
         # TODO: Replace this with image capturing logic
-        image = cv2.imread("data/NRPW/NRPW-6.jpg")
+        image = cv2.imread("test/temp.png")
         if image is None:
             raise ValueError("Image is None (possibly missing or unreadable)")
     except Exception as e:
         print(f"[!] Failed to read image: {e}")
         return False
-
+    
+    img_label = "Nothing"
     maxvalue_confidence = 0.0
 
     # Detect objects using YOLO
@@ -174,8 +175,11 @@ def main():
             color = (0, 0, 255) if label == "RPW" else (0, 255, 0)
 
             if label == "RPW" and conf > maxvalue_confidence:
+                img_label = "RPW"
                 maxvalue_confidence = conf
-
+            elif label == "NRPW" and img_label != "RPW":
+                img_label = "NRPW"
+                maxvalue_confidence = conf
             # Draw prediction on image
             image = draw(
                 image_draw=image,
@@ -194,7 +198,7 @@ def main():
 
     # Log final results
     print("Model Results:")
-    print(f"Label: {label}")
+    print(f"Label: {img_label}")
     print(f"Max RPW confidence: {maxvalue_confidence:.4f}")
     print("=" * 95)
 
