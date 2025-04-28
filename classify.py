@@ -141,7 +141,7 @@ def main():
     except Exception as e:
         print(f"[!] Failed to read image: {e}")
         return False
-    
+
     img_label = "Nothing"
     maxvalue_confidence = 0.0
 

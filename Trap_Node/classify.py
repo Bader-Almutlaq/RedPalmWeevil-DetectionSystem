@@ -5,7 +5,7 @@ from datetime import datetime
 from torchvision import transforms
 from PIL import Image
 from ultralytics import YOLO
-from picamera2 import  Picamera2
+from picamera2 import Picamera2
 import time
 from config_utils import save_classification
 from config_utils import load_config
@@ -13,9 +13,15 @@ from config_utils import load_config
 # ======= Step 1: Configurations =======
 config = load_config()
 model_path = config["hyperparameters"]["model_path"]  # Path to the classification model
-model_path_yolo = config["hyperparameters"]["yolo_path"]  # Path to the YOLO object detection model
-input_path = config["hyperparameters"]["input_path"] # Path to save the captured input image
-output_path = config["hyperparameters"]["output_path"] # Path to save the processed output image
+model_path_yolo = config["hyperparameters"][
+    "yolo_path"
+]  # Path to the YOLO object detection model
+input_path = config["hyperparameters"][
+    "input_path"
+]  # Path to save the captured input image
+output_path = config["hyperparameters"][
+    "output_path"
+]  # Path to save the processed output image
 
 
 device = torch.device(
@@ -45,11 +51,12 @@ transform = transforms.Compose(
     ]
 )
 
+
 def take_image():
     """
     Takes and save image in the input_path
     """
-    try:        
+    try:
         picam2 = Picamera2()
         picam2.configure(picam2.create_still_configuration())  # No preview
 
@@ -61,7 +68,7 @@ def take_image():
         picam2.close()
     except Exception as e:
         print(f"[classify] [!] Prediction error: {e}")
-        
+
 
 def predict(pil_image, model=model, transform=transform, device=device):
     """
@@ -117,6 +124,7 @@ def draw(image_draw, label, confidence, point_1, point_2, color):
         print(f"[classify] [!] Drawing error: {e}")
     return image_draw
 
+
 def run_inference():
     """
     Main function to run object detection and classification pipeline.
@@ -138,14 +146,14 @@ def run_inference():
 
     # Read input image
     try:
-        take_image() # saves image in images/input_image.jpg
+        take_image()  # saves image in images/input_image.jpg
         image = cv2.imread(input_path)
         if image is None:
             raise ValueError("Image is None (possibly missing or unreadable)")
     except Exception as e:
         print(f"[classify] [!] Failed to read image: {e}")
         return False
-
+    img_label = "Nothing"
     maxvalue_confidence = 0.0
 
     # Detect objects using YOLO
@@ -175,6 +183,10 @@ def run_inference():
             color = (0, 0, 255) if label == "RPW" else (0, 255, 0)
 
             if label == "RPW" and conf > maxvalue_confidence:
+                img_label = "RPW"
+                maxvalue_confidence = conf
+            elif label == "NRPW" and img_label != "RPW":
+                img_label = "NRPW"
                 maxvalue_confidence = conf
 
             # Draw prediction on image
@@ -193,10 +205,10 @@ def run_inference():
     # Save final image
     cv2.imwrite(output_path, image)
     print("[classify] Output image saved successfully.")
-    
+
     # Save result
     save_classification(label, maxvalue_confidence)
-    
+
     # Log final results
     print("[classify] Model Results:")
     print(f"[classify] Label: {label}")
