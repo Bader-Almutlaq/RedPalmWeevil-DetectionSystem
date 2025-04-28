@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trap Data Monitor</title>
+  <style>
+    body { 
+        display: flex;
+        justify-content: center;
+    }
+  
+  </style>
+  <script>
+    async function refreshData() {
+      const res = await fetch('/data');
+      const json = await res.json();
+      document.getElementById('json-display').textContent = JSON.stringify(json, null, 2);
+
+      let imageDiv = document.getElementById('image-display');
+      imageDiv.innerHTML = '';
+      if (json.TRAPS) {
+        for (const trap in json.TRAPS) {
+          if (json[trap]?.collected) {
+            const img = document.createElement('img');
+            img.src = `/images/${trap}.jpg?` + new Date().getTime(); // prevent cache
+            img.style = "width:300px; margin:10px;";
+            imageDiv.appendChild(img);
+          }
+        }
+      }
+    }
+
+    setInterval(refreshData, 5000);  // Refresh every 5 seconds
+    window.onload = refreshData;
+  </script>
+</head>
+<body>
+  <h1>Trap Data</h1>
+  <pre id="json-display">Loading...</pre>
+  <div id="image-display"></div>
+</body>
+</html>

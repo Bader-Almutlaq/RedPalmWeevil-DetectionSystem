@@ -4,20 +4,14 @@
 
 This component runs on a drone-mounted Raspberry Pi and is responsible for hosting local network, listening to incoming results from traps, and sending the gathered classification results to the central server.
 
----
+## Files
 
-## Files & Structure
-
-```
-Drone_Node/
-├── main.py              # Main execution script for image capture and classification
-├── config.json          # Configuration file with server IP and model paths
-├── requirements.txt     # All Python dependencies
-├── models/              # Folder for storing YOLO model files
-├── utils/               # Custom utility functions (e.g., for image handling or networking)
-```
-
----
+- **`main.py`**: The main script that coordinates the `collect.py` and `upload.py` scripts.
+- **`collect.json`**: Shared json that saves the collected results, and loads the collected results to the server.
+- **`json_utils.py`**: Contains the functions to `save` and `load` to the json, and maintains the critical sections using thread locks.
+- **`collect.py`**: Listen to incoming results from traps, then saves them in `collect.json`.
+- **`upload.py`**: Uploads the collected results from traps to the server.
+- **`logs.txt`**: Log file to capture runtime information.
 
 ## Installation & Setup
 

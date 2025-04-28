@@ -1,10 +1,9 @@
 import json
 import socket
 import json_utils
-import io
 import traceback
-from time import sleep
-import pdb
+import serial
+import pynmea2
 
 
 SERVER_IP = "192.168.4.193"
@@ -55,23 +54,40 @@ def send_results_to_server():
 			return False
 	return True
 
+# === Read GPS from NEO-6M ===
+def get_gps_coordinates():
+    """
+    Reads the latest GPS coordinates from a NEO-6M module connected via serial.
 
+    Returns:
+        tuple: (latitude, longitude) as floats, or (None, None) if an error occurs.
+    """
+    try:
+        gps_serial = serial.Serial("/dev/ttyAMA0", baudrate=9600, timeout=1)
+        while True:
+            line = gps_serial.readline().decode('ascii', errors='replace')
+            if line.startswith('$GPGGA') or line.startswith('$GPRMC'):
+                msg = pynmea2.parse(line)
+                return msg.latitude, msg.longitude
+    except Exception as e:
+        print(f"GPS error: {e}")
+        return None, None
 
 def main():
 	"""
 	steps:
 	1. check if at least one trap got collected
 	2. listen for the server ip
-	3. when server is found send the collected json which has all the collected trap's results
+	3. when server is found send the collected json which has all the collected trap's reults
 	4. send all the images collected in the drone's trip
 	5. reset the collection.json file
 	"""
 	if(json_utils.get_flag()):
 		
-		if(not send_results_to_server()): # handles all the logic
-			return # sending incomplete, dont reset JSON, and flag.
+		if(not send_results_to_server()): # handels all the logic
+			return # sending incompleted, dont reset JSON, and flag.
 			
-		json_utils.reset_json() # resets the json for the next collection trip
+		json_utils.reset_json() # reserts the json for the next collection trip
 		
 		print("[upload] uploaded to server successfully")
 	else:
