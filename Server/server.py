@@ -7,7 +7,8 @@ from flask import Flask, render_template, send_from_directory, jsonify
 # Configuration
 HOST = '' #listen on all interfaces
 PORT = 12345
-SAVE_DIR = './received_data'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SAVE_DIR = os.path.join(BASE_DIR, 'received_data')
 JSON_PATH = os.path.join(SAVE_DIR, 'data.json')
 
 # Ensure save directory exists
