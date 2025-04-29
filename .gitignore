@@ -2,3 +2,4 @@ data/
 __pycache__/
 test/
 .DS_Store
+Server/received_data
