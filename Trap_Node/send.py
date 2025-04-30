@@ -4,7 +4,6 @@ import io
 from PIL import Image
 import serial
 import pynmea2
-import nmap
 from config_utils import load_config
 import time
 
@@ -14,37 +13,32 @@ trap_id = config["trap_id"]
 PORT = config["network"]["PORT"]
 SUBNET = config["network"]["SUBNET"]
 RECEIVER_IP = config["network"]["HOST"]
+expected_message = b"drone_ready"
+ACK_MESSAGE = b"ack"
 
-def wait_for_receiver(target_ip=None, subnet=SUBNET):
+
+# === Passive Listener ===
+def wait_for_drone_broadcast():
     """
-    Ping the available addresses and wait until the given
-    IP address to show up in the network list.
-    The function blocks until the receiver IP is found.
+    Listens for a broadcast message from the drone indicating it's ready.
+    Blocks until the expected message is received.
 
     Args:
-        target_ip (str): IP address for the target machine
-        subnet (srt): Subnet to scan (e.g., '192.168.1.0/24').
+        port (int): The UDP port to listen on.
+        expected_message (bytes): The expected broadcast message.
 
     Returns:
-        None. Function returns only when the receiver is found.
+        None
     """
-    
-    nm = nmap.PortScanner()
-    print(f"[NMAP] Scanning {subnet} for receiver...")
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(('', PORT))
+    print(f"[SEND] Listening for drone broadcast on UDP port {PORT}...")
 
     while True:
-        try:
-            nm.scan(hosts=subnet, arguments='-sn')
-            for host in nm.all_hosts():
-                if host == target_ip:
-                    print(f"[NMAP] Receiver with IP {target_ip} is in range.")
-                    return
-            print("[NMAP] Receiver not found, retrying...")
-            time.sleep(config["hyperparameters"]["ping_drone_interval"])
-        except Exception as e:
-            print(f"[NMAP] Error: {e}")
-            time.sleep(5)
-            
+        data, addr = sock.recvfrom(1024)
+        if data == expected_message:
+            print(f"[SEND] ? Drone broadcast received from {addr[0]}")
+            return
 
 # === Read GPS from NEO-6M ===
 def get_gps_coordinates():
@@ -73,7 +67,7 @@ def send_data():
     then sends them to the receiver node via a TCP socket.
 
     Steps:
-    - Waits until the receiver node is online.
+    - Waits for a drone signal.
     - Retrieves current GPS coordinates.
     - Prepares the result json.
     - Loads the latest image.
@@ -82,17 +76,17 @@ def send_data():
     Returns:
         None
     """
-    wait_for_receiver(RECEIVER_IP)    
-    
+    wait_for_drone_broadcast()
+
     latitude, longitude = get_gps_coordinates()
 
     config = load_config()
-    
+
     data = {
-         "trap_id" : config["trap_id"],
+         "trap_id": config["trap_id"],
          "result": config["latest_classification"]["result"],
-         "confidence" : config["latest_classification"]["confidence"],
-         "timestamp" : config["latest_classification"]["timestamp"],
+         "confidence": config["latest_classification"]["confidence"],
+         "timestamp": config["latest_classification"]["timestamp"],
          "gps": {
             "latitude": latitude,
             "longitude": longitude
@@ -117,7 +111,29 @@ def send_data():
             s.sendall(image_size.to_bytes(4, byteorder='big'))
             s.sendall(image_bytes)
 
-        print("[SEND] Data sent successfully.")
+            print("[SEND] Data sent successfully.")
+
+            ## === Wait for acknowledgment from the drone with retries ===
+            ack_received = False
+            retries = 3
+            for _ in range(retries):
+                try:
+                    s.settimeout(2)  # Wait for 2 seconds to receive the acknowledgment
+                    ack_msg = s.recv(1024)
+                    if ack_msg == ACK_MESSAGE:
+                        print("[SEND] Acknowledgment received from drone.")
+                        ack_received = True
+                except socket.timeout:
+                    print(f"[SEND] Timeout and no acknowledgment received, sending again...")
+                    s.sendall(json_size.to_bytes(4, byteorder='big'))
+                    s.sendall(json_bytes)
+                    s.sendall(image_size.to_bytes(4, byteorder='big'))
+                    s.sendall(image_bytes)  
+                    print("[SEND] Data sent successfully.")
+                    
+            if not ack_received:
+                print("[SEND] Failed to receive acknowledgment after 3 retries")
+                return False
 
     except Exception as e:
         print(f"[SEND] Error: {e}")
