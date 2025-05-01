@@ -7,7 +7,6 @@
     },
     "hyperparameters": {
       "inference_interval": 5,
-      "ping_drone_interval": 5,
       "model_path": "models/efficientnet_b3_rpw.pth",
       "yolo_path": "models/yolo.pt",
       "input_path": "images/input_image.jpg",
