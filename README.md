@@ -13,7 +13,7 @@
     - [4. Classification Pipeline](#4-classification-pipeline)
     - [5. Communication Design](#5-communication-design)
   - [Results](#results)
-    - [1. Inference Time Analysis](#1-inference-time-analysis)
+    - [Inference Time Analysis](#inference-time-analysis)
     - [RAM Consumption Analysis](#ram-consumption-analysis)
     - [Computational Load (FLOPs)](#computational-load-flops)
     - [Communication Time and Delay](#communication-time-and-delay)
@@ -266,7 +266,7 @@ This architecture ensures that users can access detection results from remote lo
 
 This section presents the performance evaluation of the system across several dimensions: inference time, memory usage, computational load (FLOPs), and communication delay. The results provide insights into system efficiency, resource consumption, and scalability.
 
-### 1. Inference Time Analysis
+### Inference Time Analysis
 
 To evaluate inference efficiency, we measured the total processing time for 10 batches of image crops, each with 10 images. The images varied in insect quantity from 1 to 10. The results showed that inference time generally increased with image complexity:
 
