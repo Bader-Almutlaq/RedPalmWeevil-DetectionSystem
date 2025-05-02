@@ -372,7 +372,7 @@ RedPalmWeevil-DetectionSystem/
 │   ├── efficientnet_b4_rpw.pth         # EfficientNet-B4 model for RPW detection.
 │   ├── mobilenetv3_rpw.pth            # MobileNetV3 model for RPW detection.
 │   └── yolo.pt                        # YOLO model for RPW detection.
-├── Trap_Node/                          # Code and configuration for the IoT trap node.
+├── trap_node/                          # Code and configuration for the IoT trap node.
 │   ├── classify_benchmark.py           # Benchmarking script for classification performance.
 │   ├── classify.py                     # Main script for performing classification on trap images.
 │   ├── config_utils.py                 # Utility functions for handling configurations.
@@ -383,7 +383,7 @@ RedPalmWeevil-DetectionSystem/
 │   ├── README.md                       # Documentation for the trap node.
 │   ├── requirements.txt                # List of dependencies for the trap node.
 │   └── send.py                         # Script for sending data from the trap to the server.
-├── Drone_Node/                         # Code and configuration for the drone node.
+├── drone_node/                         # Code and configuration for the drone node.
 │   ├── collect.py                      # Script for collecting data from the trap via drone.
 │   ├── collected.json                  # JSON file for storing collected data.
 │   ├── json_utils.py                   # Utility functions for handling JSON data.
@@ -405,7 +405,7 @@ RedPalmWeevil-DetectionSystem/
 │   ├── efficientnet_b3_best_model.pth  # Best state of EfficientNet-B3 model.
 │   ├── efficientnet_b4_best_model.pth  # Best state of EfficientNet-B4 model.
 │   └── mobilenet_best_model.pth       # Best state of MobileNet model.
-├── Server/                             # Code and configuration for the server handling data.
+├── server/                             # Code and configuration for the server handling data.
 │   ├── received_data/                  # Folder for storing received data on the server.
 │   ├── server.py                       # Main server script for handling requests.
 │   ├── static/                         # Static files served by the server (e.g., images, CSS).
