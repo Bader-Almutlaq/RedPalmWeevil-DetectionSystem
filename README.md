@@ -21,6 +21,7 @@
     - [Hardware](#hardware)
     - [Software](#software)
     - [Libraries \& Dependencies](#libraries--dependencies)
+- [Repository Structure](#repository-structure)
   - [Installation \& Setup](#installation--setup)
     - [Prerequisites](#prerequisites)
     - [Deployment Steps](#deployment-steps)
@@ -343,6 +344,73 @@ These times indicate reliable, low-latency performance suitable for field deploy
 - `matplotlib`, `seaborn`, `socket`, `threading`, `json`
 
 ---
+# Repository Structure
+
+This repository contains the necessary code and data to detect and classify red palm weevil (RPW) using an IoT-based system. Below is an overview of the directory structure:
+```bash
+RedPalmWeevil-DetectionSystem/
+├── classify.py                        # Script for classifying the images and performing inference.
+├── Models_Training_TrapImages.ipynb    # Jupyter notebook for training the model with trap images.
+├── Models_Training_NoTrapImages.ipynb  # Jupyter notebook for training the model without trap images.
+├── README.md                          # The main README file for the project.
+├── requirements.txt                   # List of dependencies for the project.
+├── test/                               # Folder for testing data (ignored in git due to large size).
+│   ├── NRPW_crop_augmented/            # Augmented images of NRPW crops used for testing.
+│   ├── NRPW_trap/                     # Trap images of NRPW used for testing.
+│   ├── RPW_crop_augmented/            # Augmented images of RPW crops used for testing.
+│   ├── RPW_trap/                      # Trap images of RPW used for testing.
+│   └── temp.png                       # Temporary image used during testing.
+├── data/                               # Folder for data (ignored in git due to large size).
+│   ├── NRPW/                          # Contains NRPW images for training and inference.
+│   └── RPW/                           # Contains RPW images for training and inference.
+├── positive/                           # Folder for storing positive images with RPW detections.
+│   └── classified_20250423_190533.jpg  # Example of a classified positive image with RPW.
+├── saved_full_models/                  # Folder for storing full trained models.
+│   ├── efficientnet_b0_rpw.pth         # EfficientNet-B0 model for RPW detection.
+│   ├── efficientnet_b2_rpw.pth         # EfficientNet-B2 model for RPW detection.
+│   ├── efficientnet_b3_rpw.pth         # EfficientNet-B3 model for RPW detection.
+│   ├── efficientnet_b4_rpw.pth         # EfficientNet-B4 model for RPW detection.
+│   ├── mobilenetv3_rpw.pth            # MobileNetV3 model for RPW detection.
+│   └── yolo.pt                        # YOLO model for RPW detection.
+├── Trap_Node/                          # Code and configuration for the IoT trap node.
+│   ├── classify_benchmark.py           # Benchmarking script for classification performance.
+│   ├── classify.py                     # Main script for performing classification on trap images.
+│   ├── config_utils.py                 # Utility functions for handling configurations.
+│   ├── config.json                     # Configuration file for the trap node.
+│   ├── logs.txt                        # Log file for the trap node.
+│   ├── main.py                         # Main script for trap node operations.
+│   ├── models/                         # Folder for models used in the trap node (e.g., trained models).
+│   ├── README.md                       # Documentation for the trap node.
+│   ├── requirements.txt                # List of dependencies for the trap node.
+│   └── send.py                         # Script for sending data from the trap to the server.
+├── Drone_Node/                         # Code and configuration for the drone node.
+│   ├── collect.py                      # Script for collecting data from the trap via drone.
+│   ├── collected.json                  # JSON file for storing collected data.
+│   ├── json_utils.py                   # Utility functions for handling JSON data.
+│   ├── logs.txt                        # Log file for the drone node.
+│   ├── main.py                         # Main script for drone node operations.
+│   ├── README.md                       # Documentation for the drone node.
+│   ├── upload.py                       # Script for uploading collected data to the server.
+├── preprocess/                         # Folder for preprocessing scripts for data and images.
+│   ├── crop_and_classifie_batch.py     # Script for cropping and classifying image batches.
+│   ├── data_augmentation.py            # Script for performing data augmentation.
+│   ├── image_crop.py                   # Script for cropping images to relevant regions.
+│   ├── image_numbering.py              # Script for numbering cropped images.
+│   ├── mix_datasets.py                 # Script for mixing datasets for training.
+│   ├── scale_image.py                  # Script for scaling images to required dimensions.
+│   └── unmix_datasets.py               # Script for unmixing mixed datasets.
+├── saved_models_states/                # Folder for storing the best model states during training.
+│   ├── efficientnet_b0_best_model.pth  # Best state of EfficientNet-B0 model.
+│   ├── efficientnet_b2_best_model.pth  # Best state of EfficientNet-B2 model.
+│   ├── efficientnet_b3_best_model.pth  # Best state of EfficientNet-B3 model.
+│   ├── efficientnet_b4_best_model.pth  # Best state of EfficientNet-B4 model.
+│   └── mobilenet_best_model.pth       # Best state of MobileNet model.
+├── Server/                             # Code and configuration for the server handling data.
+│   ├── received_data/                  # Folder for storing received data on the server.
+│   ├── server.py                       # Main server script for handling requests.
+│   ├── static/                         # Static files served by the server (e.g., images, CSS).
+│   └── templates/                      # HTML templates for the server (e.g., web interface).
+```
 
 ## Installation & Setup
 
