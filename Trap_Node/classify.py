@@ -45,7 +45,7 @@ except Exception as e:
 # - EfficientNet-B4:  380 x 380
 transform = transforms.Compose(
     [
-        transforms.Resize((380, 380)),  # TODO: Change this based on the model
+        transforms.Resize((300, 300)),  # TODO: Change this based on the model
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ]

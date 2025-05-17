@@ -6,7 +6,7 @@ import serial
 import pynmea2
 
 
-SERVER_IP = "192.168.4.193"
+SERVER_IP = "X.X.X.X" # ! CHANGE THIS BASED ON SERVER IP !
 PORT = 12345
 
 def send_results_to_server():
